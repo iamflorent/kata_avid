@@ -1,5 +1,4 @@
 ﻿@page
-@using Application.Constants
 @model LoginModel
 
 @{
@@ -46,7 +45,7 @@
                         User:     <b>@AppIdentityDbContextSeed.DefaultUserName</b> OR <b>@AppIdentityDbContextSeed.AdminUserName </b><i>(customer services)</i>
                     </p>
                     <p>
-                        Password: <b>@AuthorizationConstants.DEFAULT_PASSWORD</b>
+                        Password: <b>@AppIdentityDbContextSeed.DEFAULT_PASSWORD</b>
                     </p>
                 </form>
             </section>
