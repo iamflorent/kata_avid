@@ -1,0 +1,15 @@
+﻿@page "{id:int}"
+@model WebUI.Pages.Annonce.IndexModel
+@{
+}
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="esh-catalog-item col-md-4">
+            <partial name="_productDisplay" model="@Model.CatalogItemViewModel" />
+            <partial name="_meteo" model="@Model.MeteoInfo" />
+        </div>
+        
+    </div>
+</div>
+

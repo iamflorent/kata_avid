@@ -1,0 +1,21 @@
+﻿@using Domain.Enums
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model CatalogItemViewModel
+
+<div>    
+    <img class="esh-catalog-thumbnail" src="/images/products/@(Model.PropertyType.ToString()).png" />
+    <div>
+        <span>@Model.Title</span>
+    </div>
+    <a class="btn btn-sm btn-success text-white" asp-page="/Annonce/index" asp-route-id="@Model.Id">display</a>
+    @if (User.IsInRole(nameof(Role.Administrator)) && Model.Status == Status.AwaitingValidation)
+    {
+        <a asp-page-handler="Publish" asp-route-id="@Model.Id" class="btn btn-sm btn-success text-white">publish</a>
+    }
+    <div class="esh-catalog-price">
+        <span>€ @Model.Price.ToString("N2")</span>
+    </div>
+    <div>
+        <span>@Model.Location</span>
+    </div>
+</div>

@@ -1,0 +1,16 @@
+﻿@using Domain.Enums
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model CatalogItemViewModel
+
+<div>
+    <img class="esh-catalog-thumbnail" src="/images/products/@(Model.PropertyType.ToString()).png" />
+    <div >
+        <span>@Model.Title</span>
+    </div>   
+    <div class="esh-catalog-price">
+        <span>€ @Model.Price.ToString("N2")</span>
+    </div>
+    <div class="esh-catalog-name">
+        <span>@Model.Location</span>
+    </div>
+</div>
