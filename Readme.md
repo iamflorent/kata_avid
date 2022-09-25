@@ -1,4 +1,6 @@
-﻿## Brief Technique Aviv ( Groupe SeLoger)
+![Continuous Integration and Deployment](https://github.com/iamflorent/kata_avid/actions/workflows/ci-cd.yml/badge.svg)
+
+## Brief Technique Aviv ( Groupe SeLoger)
 
 
 Nous voulons mettre en place un système de dépôt d’annonces pour un grand site bien
