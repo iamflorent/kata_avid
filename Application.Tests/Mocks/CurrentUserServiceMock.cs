@@ -14,12 +14,12 @@ namespace Application.Tests.Mocks
             return await Task.FromResult(AppIdentityDbContextSeed.DefaultUserId);
         }
 
-        private static Role Role { get; set; } = Role.Anonymous;
+        private Role Role { get; set; } = Role.Anonymous;
 
-        public static void SetRole(Role role) => Role = role;
+        public void SetRole(Role role) => Role = role;
 
         public bool IsInRole(string role)
-        {
+        {            
             return Role.ToString() == role;
         }
     }

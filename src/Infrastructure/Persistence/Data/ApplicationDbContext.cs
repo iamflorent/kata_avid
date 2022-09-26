@@ -1,9 +1,6 @@
-﻿using System.Reflection;
-using Application.Contracts.Persistence;
+﻿using Application.Contracts.Persistence;
 using Domain.Entities;
-using MediatR;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Options;
 
 namespace Infrastructure.Persistence.Data
 {

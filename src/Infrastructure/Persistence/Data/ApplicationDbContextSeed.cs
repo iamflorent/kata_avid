@@ -5,7 +5,7 @@ using Infrastructure.Persistence.Identity;
 namespace Infrastructure.Persistence.Data;
 
 public class ApplicationDbContextSeed
-{
+{    
     public static Ad adAwaitingPublish = new Ad()
     {
         UserId = AppIdentityDbContextSeed.DefaultUserId,
@@ -65,15 +65,19 @@ public class ApplicationDbContextSeed
         Price = 10000,
         Status = Status.Published
     };
-
+    
     static void AddSeedItems(ApplicationDbContext dbContext)
-    {        
-        dbContext.Ads.Add(adAwaitingPublish);
-        dbContext.Ads.Add(adHousePublished);
-        dbContext.Ads.Add(adGaragePublished);
-        dbContext.Ads.Add(adAppartPublished);
-        dbContext.Ads.Add(adAdminGaragePublished);
-        dbContext.Ads.Add(adGarageBadCityPublished);
+    {
+        var lst = new List<Ad>()
+        {
+            adAwaitingPublish,
+            adHousePublished,
+            adGaragePublished,
+            adAppartPublished,
+            adAdminGaragePublished,
+            adGarageBadCityPublished,
+        };
+        dbContext.Ads.AddRange(lst);
     }
 
     public static async Task SeedAsync(ApplicationDbContext dbContext)

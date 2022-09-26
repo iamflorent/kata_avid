@@ -1,54 +1,25 @@
 ﻿using FluentAssertions;
 using Infrastructure.Persistence.Data;
-using Infrastructure.Persistence.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Net;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using WebApi.ApiModels;
 using WebApi.Tests.Fixtures;
-using Application.Contracts.Identity;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace WebApi.Tests.ControllerApis;
 
 
-public class AdController : IClassFixture<CustomWebApplicationFactory<WebMarker>>, IAsyncLifetime
+public class AdController : AbstractControllerTest
 {    
     private const string CREATE_AD_ROUTE = "/api/ad";
     private const string GET_AD_ROUTE = "/api/ad";
     private const string PUBLISH_AD_ROUTE = "api/ad/publish";
+      
 
-    public CustomWebApplicationFactory<WebMarker> Factory { get; }
-
-    public AdController(CustomWebApplicationFactory<WebMarker> factory) => Factory = factory;
-
-    public async Task InitializeAsync()
+    public AdController(CustomWebApplicationFactory<WebMarker> factory) : base(factory)
     {
-        using var scope = Factory.Services.CreateScope();
 
-        var tokenClaimsService = scope.ServiceProvider.GetRequiredService<ITokenClaimsService>();
-        var defaultUserToken = await tokenClaimsService.GetTokenAsync(AppIdentityDbContextSeed.DefaultUserName);
-        var client = Factory.CreateClient();
-        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", defaultUserToken);
-        DefaultUserClient = client;
-
-        var adminToken = await tokenClaimsService.GetTokenAsync(AppIdentityDbContextSeed.AdminUserName);
-        var adminClient = Factory.CreateClient();
-        adminClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", adminToken);
-        AdminClient = adminClient;
     }
-
-    public Task DisposeAsync()
-    {
-        return Task.FromResult(0);
-    }
-
-    HttpClient DefaultUserClient { get; set; } = null!;
-
-
-    private HttpClient AdminClient { get; set; } = null!;
-
 
     #region Create
 

@@ -2,13 +2,17 @@
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @model CatalogItemViewModel
 
-<div>    
+@{
+    bool isAwatingValidation = Model.Status == Status.AwaitingValidation;
+}
+
+<div class="border border-2 border-@(isAwatingValidation? "warning" : "light")">
     <img class="esh-catalog-thumbnail" src="/images/products/@(Model.PropertyType.ToString()).png" />
     <div>
         <span>@Model.Title</span>
     </div>
     <a class="btn btn-sm btn-success text-white" asp-page="/Annonce/index" asp-route-id="@Model.Id">display</a>
-    @if (User.IsInRole(nameof(Role.Administrator)) && Model.Status == Status.AwaitingValidation)
+@if (isAwatingValidation)
     {
         <a asp-page-handler="Publish" asp-route-id="@Model.Id" class="btn btn-sm btn-success text-white">publish</a>
     }

@@ -8,21 +8,26 @@ namespace Application.Tests.Fixtures
     public class ApplicationFixture
     {
         public ServiceProvider ServiceProvider { get; }
-        public readonly object _locker = new object();
+
+
+        static readonly object _locker = new object();
+        static bool _seedFlag = false;
         public ApplicationFixture()
         {
-            lock(_locker)
+            ServiceProvider = ConfigureServices().BuildServiceProvider();
+            var db = ServiceProvider.GetRequiredService<ApplicationDbContext>();
+            lock (_locker)
             {
-                ServiceProvider = ConfigureServices().BuildServiceProvider();
-                var db = ServiceProvider.GetRequiredService<ApplicationDbContext>();
-
                 if (db.Database.EnsureCreated())
                 {
-                    ApplicationDbContextSeed.Seed(db);
+                    if (!_seedFlag)
+                    {
+                        ApplicationDbContextSeed.Seed(db);
+                        _seedFlag = true;
+                    }
+
                 }
             }
-            
-            
         }
 
         public static ServiceCollection ConfigureServices()
@@ -31,7 +36,9 @@ namespace Application.Tests.Fixtures
             services.AddLogging();
             services.AddInfrastructureServices(useInMemoryDatabase: true);
             services.AddApplicationServices();
-            services.AddTransient<ICurrentUserService, CurrentUserServiceMock>();
+            var mock = new CurrentUserServiceMock();
+            services.AddSingleton<ICurrentUserService>(x=> mock);
+            services.AddSingleton(x=> mock);
 
             return services;
         }

@@ -1,41 +1,20 @@
-﻿using Application.Contracts.Identity;
-using Application.Features.Location.Queries.GetMeteoInfo;
+﻿using Application.Features.Location.Queries.GetMeteoInfo;
 using FluentAssertions;
-using Infrastructure.Persistence.Identity;
-using Microsoft.Extensions.DependencyInjection;
-using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using WebApi.Tests.Fixtures;
 
 namespace WebApi.Tests.ControllerApis
 {
-   
-    public class WeatherForecastController : IClassFixture<CustomWebApplicationFactory<WebMarker>>, IAsyncLifetime
+
+    public class WeatherForecastController : AbstractControllerTest
     {
         
         private const string GET_METEO_ROUTE = "/api/WeatherForecast";
-        public CustomWebApplicationFactory<WebMarker> Factory { get; }
-        public WeatherForecastController(CustomWebApplicationFactory<WebMarker> factory) => Factory = factory;
-
-        public async Task InitializeAsync()
+       
+        public WeatherForecastController(CustomWebApplicationFactory<WebMarker> factory) : base(factory)
         {
-            using var scope = Factory.Services.CreateScope();
 
-            var tokenClaimsService = scope.ServiceProvider.GetRequiredService<ITokenClaimsService>();
-            var defaultUserToken = await tokenClaimsService.GetTokenAsync(AppIdentityDbContextSeed.DefaultUserName);
-            var client = Factory.CreateClient();
-            client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("bearer", defaultUserToken);
-            DefaultUserClient = client;
         }
-
-        public Task DisposeAsync()
-        {
-            return Task.FromResult(0);
-        }
-
-        HttpClient DefaultUserClient { get; set; } = null!;
-
-
 
         [Fact]
         public async Task Get_Unknown_Location_Should_Return_NotFound()

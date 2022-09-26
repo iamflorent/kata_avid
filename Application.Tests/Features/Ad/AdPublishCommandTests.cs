@@ -7,18 +7,16 @@ using Domain.Enums;
 using FluentAssertions;
 using FluentAssertions.Specialized;
 using Infrastructure.Persistence.Data;
-using MediatR;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Tests.Features.Ad
 {
-    [CollectionDefinition("Non-Parallel Collection", DisableParallelization = true)]//CurrentUserServiceMock only work if parallelization is disable
-    public class AdPublishCommandTests : IClassFixture<ApplicationFixture>
+
+    public class AdPublishCommandTests : BaseSerialTest
     {
-        private readonly IMediator _mediator;        
-        public AdPublishCommandTests(ApplicationFixture applicationFixture)
+        
+        public AdPublishCommandTests(ApplicationFixture applicationFixture) : base(applicationFixture)
         {            
-            _mediator = applicationFixture.ServiceProvider.GetRequiredService<IMediator>();
+            
         }
 
         [Fact]
@@ -29,7 +27,7 @@ namespace Application.Tests.Features.Ad
             var command = new PublishAdCommand(ApplicationDbContextSeed.adAwaitingPublish.Id);
 
             //act
-            Func<Task> act = async () => await _mediator.Send(command);
+            Func<Task> act = async () => await _mediator.Send(command);            
 
             //assert
             await act.Should().ThrowAsync<ForbiddenAccessException>();
@@ -41,7 +39,16 @@ namespace Application.Tests.Features.Ad
         {
             //prepare            
             CurrentUserServiceMock.SetRole(Role.Administrator);
-            var command = new PublishAdCommand(ApplicationDbContextSeed.adAwaitingPublish.Id);
+            var createCommand = new CreateAdCommand()
+            {
+                Location = "marseille",
+                PropertyType = Domain.Enums.PropertyType.House,
+                Title = "Jolie maison",
+                Price = 10
+            };
+
+            int id = await _mediator.Send(createCommand);
+            var command = new PublishAdCommand(id);
 
             //act
             Func<Task> act = async () => await _mediator.Send(command);

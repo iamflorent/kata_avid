@@ -37,17 +37,20 @@ public static class ConfigureServices
 
         return services;
     }
-
+    
     public static async Task SeedInfrastructure(this IServiceProvider services)
     {
         using var scope = services.CreateScope();
         var scopedProvider = scope.ServiceProvider;
+
         var userManager = scopedProvider.GetRequiredService<UserManager<ApplicationUser>>();
+
         var roleManager = scopedProvider.GetRequiredService<RoleManager<IdentityRole>>();
+        await AppIdentityDbContextSeed.SeedRoleAsync(roleManager);
+        await AppIdentityDbContextSeed.SeedAdminAsync(userManager);
+        await AppIdentityDbContextSeed.SeedUserAsync(userManager);
 
         var dbContext = scopedProvider.GetRequiredService<ApplicationDbContext>();
-        await AppIdentityDbContextSeed.SeedAsync(userManager, roleManager);
         await ApplicationDbContextSeed.SeedAsync(dbContext);
-
     }
 }

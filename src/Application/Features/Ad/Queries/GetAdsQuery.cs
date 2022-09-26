@@ -22,7 +22,7 @@ namespace Application.Features.Ad.Queries
 
     public class GetAdsQueryHandler : IRequestHandler<GetAdsQuery, IEnumerable<Domain.Entities.Ad>>
     {
-        private IApplicationDbContext _context;
+        private readonly IApplicationDbContext _context;
 
         public GetAdsQueryHandler(IApplicationDbContext context, ICurrentUserService currentUserService)
         {
@@ -38,14 +38,13 @@ namespace Application.Features.Ad.Queries
             {
                 throw new ArgumentNullException(nameof(request));
             }
-#warning complete unit test for user list and admin list
             Expression<Func<Domain.Entities.Ad, bool>> userFilter = request.UserId != null ?  x => x.UserId == request.UserId : y=> y.Status == Status.Published || CurrentUserService.IsInRole(nameof(Role.Administrator)) ;
             Expression<Func<Domain.Entities.Ad, bool>> propertyTypeFilter = request.PropertyType.HasValue ?  x => x.PropertyType == request.PropertyType : x=> true;
 
             return await _context.Ads
                 .Where(propertyTypeFilter)
                 .Where(userFilter)
-                .ToArrayAsync();
+                .ToArrayAsync(cancellationToken);
 
         }
     }
