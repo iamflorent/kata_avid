@@ -7,11 +7,11 @@ namespace Application.Features.Ad.Commands
         public CreateAdCommandValidator()
         {
             RuleFor(v => v.Title)
-                .MaximumLength(200)
+                .MaximumLength(100)
                 .NotEmpty();
 
             RuleFor(v => v.Location)
-                .MaximumLength(200)
+                .MaximumLength(100)
                 .NotEmpty();
 
             RuleFor(v => v.Price)
